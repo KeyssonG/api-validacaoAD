@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: validacaoAD-service
+spec:
+  selector:
+    app: validacaoAD
+  ports:
+    - protocol: TCP
+      port: 8089
+      targetPort: 8089
+      nodPort: 31007
+  type: LoadBalancer  # Ou NodePort
