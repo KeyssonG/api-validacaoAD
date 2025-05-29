@@ -12,6 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestRegister {
+
+    @NotBlank(message = "Nome do funcionário obrigatório.")
+    private String nome;
+
     @NotBlank(message = "E-mail Corporativo obrigatório.")
     private String email;
 

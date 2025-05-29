@@ -28,8 +28,14 @@ public class RegisterRepository {
 
     private static final String CHECK_EXISTS_CPF= """
         SELECT COUNT(*) 
-        FROM companies 
-        WHERE cnpj = ?
+        FROM funcionarios 
+        WHERE cpf = ?
+        """;
+
+    private static final String CHECK_EXISTS_NUMERO_CONTA = """
+        SELECT COUNT(*) 
+        FROM users 
+        WHERE numero_conta = ?
         """;
 
     public boolean existsByCpf(String cpf) {
@@ -37,38 +43,50 @@ public class RegisterRepository {
         return count != null && count > 0;
     }
 
-    public FuncionarioRegistroResultado save(String email, String password,
-                                         String username, String departamento) {
+    public FuncionarioRegistroResultado save(String nome, String email, String cpf, String password,
+                                             String username, String departamento, int numeroConta) {
 
-        UUID consumerId = UUID.randomUUID();
-
-        String sql = "CALL proc_registrar_funcionario(?, ?, ?, ?)";
+        String sql = "CALL proc_registrar_funcionario(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         Map<String, Object> result = jdbcTemplate.call(connection -> {
             CallableStatement cs = connection.prepareCall(sql);
 
-            cs.setString(1, email);
-            cs.setString(2, username);
-            cs.setString(3, password);
-            cs.setString(4, departamento);
 
-            cs.registerOutParameter(5, Types.INTEGER); // out_result
-            cs.registerOutParameter(6, Types.INTEGER); // out_company_id
+            cs.setString(1, nome);
+            cs.setString(2, departamento);
+            cs.setString(3, email);
+            cs.setString(4, cpf);
+            cs.setString(5, username);
+            cs.setString(6, password);
+            cs.setInt(7, numeroConta);
+
+            cs.registerOutParameter(8, Types.INTEGER);
+            cs.registerOutParameter(9, Types.INTEGER);
 
             return cs;
         }, Arrays.asList(
+                new SqlParameter("p_nome", Types.VARCHAR),
+                new SqlParameter("p_departamento", Types.VARCHAR),
                 new SqlParameter("p_email", Types.VARCHAR),
+                new SqlParameter("p_cpf", Types.VARCHAR),
                 new SqlParameter("p_username", Types.VARCHAR),
                 new SqlParameter("p_password", Types.VARCHAR),
-                new SqlParameter("departamento", Types.VARCHAR),
+                new SqlParameter("p_numero_conta", Types.INTEGER),
                 new SqlOutParameter("out_result", Types.INTEGER),
-                new SqlOutParameter("out_company_id", Types.INTEGER)
+                new SqlOutParameter("out_user_id", Types.INTEGER)
         ));
 
         System.out.println("Map result: " + result);
 
         Integer resultCode = (Integer) result.get("out_result");
-        Integer idFuncionario = (Integer) result.get("out_employee _id");
+        Integer idFuncionario = (Integer) result.get("out_user_id");
+
         return new FuncionarioRegistroResultado(resultCode, idFuncionario);
+    }
+
+
+    public boolean existsByNumeroConta(int numeroConta) {
+        Long count = jdbcTemplate.queryForObject(CHECK_EXISTS_NUMERO_CONTA, Long.class, numeroConta);
+        return count != null && count > 0;
     }
 }
