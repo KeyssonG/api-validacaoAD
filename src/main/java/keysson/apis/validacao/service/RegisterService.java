@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.Random;
-import java.util.UUID;
 
 @Service
 public class RegisterService {
@@ -39,15 +38,18 @@ public class RegisterService {
             throw new BusinessRuleException(ErrorCode.CPF_JA_CADASTRADO);
         }
 
+        int numeroConta = gerarNumeroContaUnico();
+
         String encodedPassword = passwordEncoder.encode(requestRegister.getPassword());
 
-        String consumerId = UUID.randomUUID().toString();
-
         FuncionarioRegistroResultado resultado = registerRepository.save(
+                requestRegister.getNome(),
                 requestRegister.getEmail(),
+                requestRegister.getCpf(),
                 encodedPassword,
                 requestRegister.getUsername(),
-                requestRegister.getDepartamento()
+                requestRegister.getDepartamento(),
+                numeroConta
         );
 
         if (resultado.getResultCode() == 0) {
@@ -66,5 +68,15 @@ public class RegisterService {
         } else if (resultado.getResultCode() == 1) {
             throw new BusinessRuleException(ErrorCode.ERRO_CADASTRAR);
         }
+    }
+    private int gerarNumeroContaUnico() {
+        Random random = new Random();
+        int numero;
+
+        do {
+            numero = 100000 + random.nextInt(900000);
+        } while (registerRepository.existsByNumeroConta(numero));
+
+        return numero;
     }
 }
