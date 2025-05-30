@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FuncionarioCadastradoEvent {
+    private int idFuncionario;
+    private String name;
     private String email;
+    private String cpf;
     private String username;
 }

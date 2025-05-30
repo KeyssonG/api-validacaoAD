@@ -54,7 +54,10 @@ public class RegisterService {
 
         if (resultado.getResultCode() == 0) {
             FuncionarioCadastradoEvent event = new FuncionarioCadastradoEvent(
+                    resultado.getIdFuncionario(),
+                    requestRegister.getNome(),
                     requestRegister.getEmail(),
+                    requestRegister.getCpf(),
                     requestRegister.getUsername()
             );
             try {
