@@ -39,11 +39,10 @@ public class AuthService {
                 throw new BusinessRuleException(ErrorCode.BAD_PASSWORD);
             }
 
-            int status = user.getStatus();
-
-            return jwtUtil.generateToken(user.getId(), user.getCompanyId(), user.getConsumerId());
-
-
+            return jwtUtil.generateToken(
+                    user.getId(),
+                    user.getCompanyId(),
+                    user.getConsumerId());
 
     }
 }
