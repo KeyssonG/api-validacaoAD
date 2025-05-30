@@ -11,7 +11,7 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 # Renomeia o JAR gerado
-RUN mv target/*.jar /app/validacaoAD.jar
+RUN mv target/*.jar /app/validacaoad.jar
 
 # Etapa 2: Imagem final para execução
 FROM amazoncorretto:21
@@ -19,10 +19,10 @@ FROM amazoncorretto:21
 WORKDIR /app
 
 # Copia o JAR da etapa de build
-COPY --from=builder /app/validacaoAD.jar /app/validacaoAD.jar
+COPY --from=builder /app/validacaoad.jar /app/validacaoad.jar
 
 # Expõe a porta da aplicação
 EXPOSE 8083
 
 # Comando de inicialização
-CMD ["java", "-jar", "/app/validacaoAD.jar"]
+CMD ["java", "-jar", "/app/validacaoad.jar"]

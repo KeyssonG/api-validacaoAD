@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_IMAGE = "keyssong/validacaoAD"
-        DEPLOYMENT_FILE = "k8s\\validacaoAD-deployment.yaml"
+        DOCKERHUB_IMAGE = "keyssong/validacaoad"
+        DEPLOYMENT_FILE = "k8s\\validacaoad-deployment.yaml"
         IMAGE_TAG = "latest"
     }
 
@@ -82,7 +82,7 @@ pipeline {
 
     post {
         success {
-            echo "Pipeline concluída com sucesso! A imagem 'keyssong/validacaoAD:latest' foi atualizada e o ArgoCD aplicará as alterações automaticamente. 🚀"
+            echo "Pipeline concluída com sucesso! A imagem 'keyssong/validacaoad:latest' foi atualizada e o ArgoCD aplicará as alterações automaticamente. 🚀"
         }
         failure {
             echo "Erro na pipeline. Confira os logs para mais detalhes."
