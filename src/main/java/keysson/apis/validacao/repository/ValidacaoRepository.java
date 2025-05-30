@@ -21,10 +21,14 @@ public class ValidacaoRepository {
     private static final String FIND_BY_USERNAME = """
             SELECT
               u.id,
+              u.company_id,
               u.username,
               u.password,
-            FROM users u -- será criada uma tabela somente para funcionarios
-            WHERE u.username = ?;
+              u.status,
+              c.consumer_id 
+            FROM users u
+            JOIN companies c ON u.company_id = c.id
+            WHERE u.username = ? AND c.id = 0;
             """;
 
     private static final String ACCOUNT_ACTIVATION = """

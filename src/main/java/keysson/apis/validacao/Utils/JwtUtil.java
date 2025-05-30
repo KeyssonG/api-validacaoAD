@@ -28,7 +28,7 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public LoginResponse generateToken(Long id, Long companyId, UUID consumerId) {
+    public LoginResponse generateToken(int id, int companyId, UUID consumerId) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + EXPIRATION_TIME);
 
