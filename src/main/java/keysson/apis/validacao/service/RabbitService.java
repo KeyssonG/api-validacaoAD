@@ -19,8 +19,12 @@ public class RabbitService {
 
     public void saveMessagesInBank(FuncionarioCadastradoEvent event, int status) throws SQLException {
         MensagensPendentes mensagenPendente = new MensagensPendentes();
+        mensagenPendente.setIdFuncionario(event.getIdFuncionario());
+        mensagenPendente.setName(event.getName());
         mensagenPendente.setEmail(event.getEmail());
+        mensagenPendente.setCpf(event.getCpf());
         mensagenPendente.setUsername(event.getUsername());
+        mensagenPendente.setStatus(event.getStatus());
 
         rabbitRepository.saveMenssage(mensagenPendente);
     }

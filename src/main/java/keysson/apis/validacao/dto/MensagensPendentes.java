@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MensagensPendentes {
     private int idFuncionario;
+    private String name;
     private String email;
+    private String cpf;
     private String username;
+    private int status;
 }
