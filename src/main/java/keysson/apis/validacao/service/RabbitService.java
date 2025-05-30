@@ -24,7 +24,7 @@ public class RabbitService {
         mensagenPendente.setEmail(event.getEmail());
         mensagenPendente.setCpf(event.getCpf());
         mensagenPendente.setUsername(event.getUsername());
-        mensagenPendente.setStatus(event.getStatus());
+        mensagenPendente.setStatus(status);
 
         rabbitRepository.saveMenssage(mensagenPendente);
     }
