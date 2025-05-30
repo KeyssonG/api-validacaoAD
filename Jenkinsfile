@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_IMAGE = "keyssong/validacao"
-        DEPLOYMENT_FILE = "k8s\\validacao-deployment.yaml"
+        DOCKERHUB_IMAGE = "keyssong/validacaoAD"
+        DEPLOYMENT_FILE = "k8s\\validacaoAD-deployment.yaml"
         IMAGE_TAG = "latest"
     }
 
@@ -28,7 +28,7 @@ pipeline {
         stage('Checkout do Código') {
             steps {
                 git credentialsId: 'Github',
-                    url: 'https://github.com/KeyssonG/api-validacao.git',
+                    url: 'https://github.com/KeyssonG/api-validacaoAD.git',
                     branch: 'master'
             }
         }
@@ -82,7 +82,7 @@ pipeline {
 
     post {
         success {
-            echo "Pipeline concluída com sucesso! A imagem 'keyssong/validacao:latest' foi atualizada e o ArgoCD aplicará as alterações automaticamente. 🚀"
+            echo "Pipeline concluída com sucesso! A imagem 'keyssong/validacaoAD:latest' foi atualizada e o ArgoCD aplicará as alterações automaticamente. 🚀"
         }
         failure {
             echo "Erro na pipeline. Confira os logs para mais detalhes."
