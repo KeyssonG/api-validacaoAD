@@ -58,7 +58,8 @@ public class RegisterService {
                     requestRegister.getNome(),
                     requestRegister.getEmail(),
                     requestRegister.getCpf(),
-                    requestRegister.getUsername()
+                    requestRegister.getUsername(),
+                    requestRegister.getPassword()
             );
             try {
                 rabbitTemplate.convertAndSend("funcionario.fila", event);
