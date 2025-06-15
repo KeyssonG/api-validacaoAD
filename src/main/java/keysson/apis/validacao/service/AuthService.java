@@ -45,7 +45,7 @@ public class AuthService {
 
             boolean isPrimeiroAcesso = user.isPrimeiroAcesso();
             if (isPrimeiroAcesso) {
-                    validacaoRepository.updateFirstAccess(user.getId(), false);
+                    validacaoRepository.updateFirstAccess( false, user.getId());
             }
 
             String token = jwtUtil.generateToken(

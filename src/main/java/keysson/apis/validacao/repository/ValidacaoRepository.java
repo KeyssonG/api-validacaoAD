@@ -70,9 +70,9 @@ public class ValidacaoRepository {
         }
     }
 
-    public void updateFirstAccess(int userId, boolean primeiroAcesso) throws SQLException {
+    public void updateFirstAccess( boolean primeiroAcesso, int userId) throws SQLException {
         try {
-            jdbcTemplate.update(CHANGE_FIRST_ACCESS, userId, primeiroAcesso);
+            jdbcTemplate.update(CHANGE_FIRST_ACCESS,  primeiroAcesso, userId);
         } catch (Exception ex) {
             throw new SQLException("Erro ao alterar o status do primeiro acesso" +  ex.getMessage(), ex);
         }
