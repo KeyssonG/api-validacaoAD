@@ -28,7 +28,7 @@ public class ValidacaoRepository {
               u.password,
               u.status,
               c.consumer_id,
-              c.primeiro_acesso 
+              u.primeiro_acesso 
             FROM users u
             JOIN companies c ON u.company_id = c.id
             WHERE u.username = ? AND c.id = 0;

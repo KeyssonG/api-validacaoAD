@@ -32,14 +32,25 @@ public class RegisterRepository {
         WHERE cpf = ?
         """;
 
-    private static final String CHECK_EXISTS_NUMERO_CONTA = """
+    private static final String CHECK_EXISTS_USERNAME= """
         SELECT COUNT(*) 
-        FROM users 
-        WHERE numero_conta = ?
+        FROM funcionarios 
+        WHERE cpf = ?
+        """;
+
+    private static final String CHECK_EXISTS_NUMERO_CONTA = """
+            SELECT COUNT(*)
+            FROM USERS
+            WHERE username  = ? and company_id = 0
         """;
 
     public boolean existsByCpf(String cpf) {
         Long count = jdbcTemplate.queryForObject(CHECK_EXISTS_CPF, Long.class, cpf);
+        return count != null && count > 0;
+    }
+
+    public boolean existsByUsername(String name) {
+        Long count = jdbcTemplate.queryForObject(CHECK_EXISTS_USERNAME, Long.class, name);
         return count != null && count > 0;
     }
 

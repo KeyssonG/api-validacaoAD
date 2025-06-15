@@ -9,7 +9,8 @@ public enum ErrorCode {
         ERRO_STATUS_COMPANY("Erro ao consultar status da empresa", HttpStatus.BAD_REQUEST),
         CONTA_PENDENTE("A conta empresarial está pendente", HttpStatus.BAD_REQUEST),
         CPF_JA_CADASTRADO("O CPF Ja está cadastrado", HttpStatus.BAD_REQUEST),
-        ERRO_CADASTRAR("Erro ao cadastrar empresa", HttpStatus.BAD_REQUEST)
+        ERRO_CADASTRAR("Erro ao cadastrar empresa", HttpStatus.BAD_REQUEST),
+        USERNAME_JA_EXISTE("Esse Username já está em uso", HttpStatus.BAD_REQUEST)
     ;
 
     private final String message;

@@ -40,6 +40,10 @@ public class RegisterService {
             throw new BusinessRuleException(ErrorCode.CPF_JA_CADASTRADO);
         }
 
+        if (registerRepository.existsByUsername(requestRegister.getUsername())) {
+            throw new BusinessRuleException(ErrorCode.USERNAME_JA_EXISTE);
+        }
+
         int numeroConta = gerarNumeroContaUnico();
 
         String plainPassword = generateRandomPassword();
