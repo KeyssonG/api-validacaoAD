@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
+
 @RestController
 @RequiredArgsConstructor
 public class AuthControllerImpl implements AuthController{
@@ -15,7 +17,7 @@ public class AuthControllerImpl implements AuthController{
     private final AuthService authService;
 
     @Override
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) throws SQLException {
         LoginResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }

@@ -10,4 +10,5 @@ import java.util.Date;
 public class LoginResponse {
     private String token;
     private Date expiresAt;
+    private Boolean primeiroAcesso;
 }

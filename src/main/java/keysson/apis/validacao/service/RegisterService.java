@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.sql.SQLException;
+import java.util.Base64;
 import java.util.Random;
 
 @Service
@@ -40,7 +42,8 @@ public class RegisterService {
 
         int numeroConta = gerarNumeroContaUnico();
 
-        String encodedPassword = passwordEncoder.encode(requestRegister.getPassword());
+        String plainPassword = generateRandomPassword();
+        String encodedPassword = passwordEncoder.encode(plainPassword);
 
         FuncionarioRegistroResultado resultado = registerRepository.save(
                 requestRegister.getNome(),
@@ -59,7 +62,7 @@ public class RegisterService {
                     requestRegister.getEmail(),
                     requestRegister.getCpf(),
                     requestRegister.getUsername(),
-                    requestRegister.getPassword()
+                    plainPassword
             );
             try {
                 rabbitTemplate.convertAndSend("funcionario.fila", event);
@@ -82,5 +85,12 @@ public class RegisterService {
         } while (registerRepository.existsByNumeroConta(numero));
 
         return numero;
+    }
+
+    private String generateRandomPassword() {
+        SecureRandom random = new SecureRandom();
+        byte[] bytes = new byte[12];
+        random.nextBytes(bytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes).substring(0, 12);
     }
 }

@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
+import java.sql.SQLException;
+
 public interface AuthController {
 
     @PostMapping("/login")
@@ -22,5 +24,5 @@ public interface AuthController {
                     content = @Content(schema = @Schema(implementation = LoginRequest.class))
             )
     )
-    ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request);
+    ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) throws SQLException;
 }

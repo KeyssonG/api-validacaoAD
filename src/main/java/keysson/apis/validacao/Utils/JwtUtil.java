@@ -28,11 +28,11 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public LoginResponse generateToken(int id, int companyId, UUID consumerId) {
+    public String generateToken(int id, int companyId, UUID consumerId) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + EXPIRATION_TIME);
 
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .claim("id", id)
                 .claim("companyId", companyId)
                 .claim("consumerId", consumerId.toString())
@@ -40,7 +40,8 @@ public class JwtUtil {
                 .setExpiration(expiration)
                 .signWith(key)
                 .compact();
-
-        return new LoginResponse(token, expiration);
+    }
+    public Date getExpirationDate() {
+        return new Date(System.currentTimeMillis() + EXPIRATION_TIME);
     }
 }

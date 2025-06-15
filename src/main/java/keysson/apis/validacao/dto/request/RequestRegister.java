@@ -26,10 +26,6 @@ public class RequestRegister {
     @NotBlank(message = "O nome do usuário deve ser preenchido")
     private String username;
 
-    @NotBlank(message = "A senha é obrigatória")
-    @Size(min = 6, message = "A senha deve ter pelo menos 6 caracteres")
-    private String password;
-
     @NotBlank(message = "Departamento que o funcionário pertence")
     private String departamento;
 }

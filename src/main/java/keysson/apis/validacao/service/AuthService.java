@@ -1,5 +1,6 @@
 package keysson.apis.validacao.service;
 
+import jakarta.transaction.Transactional;
 import keysson.apis.validacao.Utils.JwtUtil;
 import keysson.apis.validacao.dto.request.LoginRequest;
 import keysson.apis.validacao.dto.response.LoginResponse;
@@ -10,6 +11,8 @@ import keysson.apis.validacao.repository.ValidacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.sql.SQLException;
 
 @Service
 public class AuthService {
@@ -27,7 +30,8 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public LoginResponse login (LoginRequest request) {
+    @Transactional
+    public LoginResponse login (LoginRequest request) throws SQLException {
             User user = validacaoRepository.findByUsername(request.getUsername());
             if (user == null) {
                 throw new BusinessRuleException(ErrorCode.USER_NOT_FOUND);
@@ -39,10 +43,17 @@ public class AuthService {
                 throw new BusinessRuleException(ErrorCode.BAD_PASSWORD);
             }
 
-            return jwtUtil.generateToken(
+            boolean isPrimeiroAcesso = user.isPrimeiroAcesso();
+            if (isPrimeiroAcesso) {
+                    validacaoRepository.updateFirstAccess(user.getId(), false);
+            }
+
+            String token = jwtUtil.generateToken(
                     user.getId(),
                     user.getCompanyId(),
                     user.getConsumerId());
+
+            return new LoginResponse(token, jwtUtil.getExpirationDate(), isPrimeiroAcesso);
 
     }
 }
