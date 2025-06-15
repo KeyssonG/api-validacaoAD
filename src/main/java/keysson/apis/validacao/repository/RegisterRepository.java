@@ -33,15 +33,15 @@ public class RegisterRepository {
         """;
 
     private static final String CHECK_EXISTS_USERNAME= """
-        SELECT COUNT(*) 
-        FROM funcionarios 
-        WHERE cpf = ?
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE username  = ? and company_id = 0
         """;
 
     private static final String CHECK_EXISTS_NUMERO_CONTA = """
-            SELECT COUNT(*)
-            FROM USERS
-            WHERE username  = ? and company_id = 0
+             SELECT COUNT(*)
+             FROM users
+             WHERE numero_conta = ?
         """;
 
     public boolean existsByCpf(String cpf) {
