@@ -12,10 +12,10 @@ import java.sql.SQLException;
 
 public interface RegisterController {
 
-    @PostMapping("/register")
+    @PostMapping("/cadastrar/funcionario")
     @Operation(
-            summary = "Cadastrar uma nova empresa",
-            description = "Endpoint para cadastrar uma nova empresa, cria usuário administrativo.",
+            summary = "Cadastrar um novo funcionário.",
+            description = "Endpoint para cadastrar um novo funcionário MultiThread.",
             requestBody = @RequestBody(
                     description = "Dados da nova empresa",
                     required = true,

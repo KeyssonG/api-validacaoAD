@@ -31,7 +31,7 @@ public class ValidacaoRepository {
               u.primeiro_acesso 
             FROM users u
             JOIN companies c ON u.company_id = c.id
-            WHERE u.username = ? AND c.id = 0;
+            WHERE u.id = ? AND c.id = 0;
             """;
 
     private static final String ACCOUNT_ACTIVATION = """
@@ -46,6 +46,10 @@ public class ValidacaoRepository {
             UPDATE users SET primeiro_acesso = ? WHERE id = ?
             """;
 
+    private static final String UPDATE_PASSWORD = """
+            UPDATE users SET password = ? WHERE id = ?
+            """;
+
     public User findByUsername(String username) {
         return jdbcTemplate.query(FIND_BY_USERNAME, new Object[]{username}, rs -> {
             if (rs.next()) {
@@ -54,6 +58,16 @@ public class ValidacaoRepository {
             return null;
         });
     }
+
+    public User findById(Integer userId) {
+        return jdbcTemplate.query(FIND_BY_USERNAME, new Object[]{userId}, rs -> {
+            if (rs.next()) {
+                return userRowMapper.mapRow(rs, 1);
+            }
+            return null;
+        });
+    }
+
     public void activeAccount (Long idUser, Long idEmpresa, String username) {
         try {
             jdbcTemplate.update(ACCOUNT_ACTIVATION, idUser, idEmpresa, username);
@@ -75,6 +89,14 @@ public class ValidacaoRepository {
             jdbcTemplate.update(CHANGE_FIRST_ACCESS,  primeiroAcesso, userId);
         } catch (Exception ex) {
             throw new SQLException("Erro ao alterar o status do primeiro acesso" +  ex.getMessage(), ex);
+        }
+    }
+
+    public void saveNewPassword(String novaSenha, Integer userId) throws SQLException {
+        try {
+            jdbcTemplate.update(UPDATE_PASSWORD, novaSenha, userId);
+        } catch (Exception ex) {
+            throw new SQLException("Erro ao tentar atualizar a senha" + ex.getMessage(), ex);
         }
     }
 }

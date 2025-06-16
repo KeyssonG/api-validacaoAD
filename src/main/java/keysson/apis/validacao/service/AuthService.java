@@ -3,6 +3,7 @@ package keysson.apis.validacao.service;
 import jakarta.transaction.Transactional;
 import keysson.apis.validacao.Utils.JwtUtil;
 import keysson.apis.validacao.dto.request.LoginRequest;
+import keysson.apis.validacao.dto.request.RequestUpdatePassword;
 import keysson.apis.validacao.dto.response.LoginResponse;
 import keysson.apis.validacao.exception.BusinessRuleException;
 import keysson.apis.validacao.exception.enums.ErrorCode;
@@ -56,4 +57,25 @@ public class AuthService {
             return new LoginResponse(token, jwtUtil.getExpirationDate(), isPrimeiroAcesso);
 
     }
+
+
+    public void updatePasswordUser(RequestUpdatePassword request, String token) throws SQLException {
+        // Token já foi limpo no filtro
+        if (!jwtUtil.isTokenValid(token)) {
+            throw new IllegalArgumentException("Token inválido ou expirado.");
+        }
+
+        Integer userId = jwtUtil.extractUserId(token);
+        if (userId == null) {
+            throw new IllegalArgumentException("ID do usuário não encontrado no token.");
+        }
+
+        if (request.getNewPassword() == null || request.getNewPassword().length() < 6) {
+            throw new IllegalArgumentException("A nova senha deve ter pelo menos 6 caracteres.");
+        }
+
+        String novaSenhaCriptografada = passwordEncoder.encode(request.getNewPassword());
+        validacaoRepository.saveNewPassword(novaSenhaCriptografada, userId);
+    }
 }
+

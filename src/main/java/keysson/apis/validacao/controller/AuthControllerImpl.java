@@ -1,6 +1,7 @@
 package keysson.apis.validacao.controller;
 
 import keysson.apis.validacao.dto.request.LoginRequest;
+import keysson.apis.validacao.dto.request.RequestUpdatePassword;
 import keysson.apis.validacao.dto.response.LoginResponse;
 import keysson.apis.validacao.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -21,4 +22,11 @@ public class AuthControllerImpl implements AuthController{
         LoginResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }
+
+    @Override
+    public void updatePassword(RequestUpdatePassword request, String token) throws SQLException {
+        authService.updatePasswordUser(request, token);
+    }
+
+
 }
