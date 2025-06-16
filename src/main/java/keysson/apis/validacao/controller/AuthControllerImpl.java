@@ -1,5 +1,6 @@
 package keysson.apis.validacao.controller;
 
+import keysson.apis.validacao.config.JwtAuthenticationFilter;
 import keysson.apis.validacao.dto.request.LoginRequest;
 import keysson.apis.validacao.dto.request.RequestUpdatePassword;
 import keysson.apis.validacao.dto.response.LoginResponse;
@@ -17,6 +18,7 @@ public class AuthControllerImpl implements AuthController{
 
     private final AuthService authService;
 
+
     @Override
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) throws SQLException {
         LoginResponse response = authService.login(request);
@@ -24,8 +26,8 @@ public class AuthControllerImpl implements AuthController{
     }
 
     @Override
-    public void updatePassword(RequestUpdatePassword request, String token) throws SQLException {
-        authService.updatePasswordUser(request, token);
+    public void updatePassword(@RequestBody RequestUpdatePassword request, String token) throws SQLException {
+        authService.updatePasswordUser(request);
     }
 
 

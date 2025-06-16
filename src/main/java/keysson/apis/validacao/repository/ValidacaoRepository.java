@@ -31,7 +31,7 @@ public class ValidacaoRepository {
               u.primeiro_acesso 
             FROM users u
             JOIN companies c ON u.company_id = c.id
-            WHERE u.id = ? AND c.id = 0;
+            WHERE u.username = ? AND c.id = 0;
             """;
 
     private static final String ACCOUNT_ACTIVATION = """

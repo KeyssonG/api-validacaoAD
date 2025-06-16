@@ -1,5 +1,6 @@
 package keysson.apis.validacao.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import keysson.apis.validacao.Utils.JwtUtil;
 import keysson.apis.validacao.dto.request.LoginRequest;
@@ -25,6 +26,9 @@ public class AuthService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private HttpServletRequest httpRequest;
 
     @Autowired
     public AuthService(PasswordEncoder passwordEncoder) {
@@ -59,11 +63,9 @@ public class AuthService {
     }
 
 
-    public void updatePasswordUser(RequestUpdatePassword request, String token) throws SQLException {
-        // Token já foi limpo no filtro
-        if (!jwtUtil.isTokenValid(token)) {
-            throw new IllegalArgumentException("Token inválido ou expirado.");
-        }
+    public void updatePasswordUser(RequestUpdatePassword request) throws SQLException {
+
+        String token = (String) httpRequest.getAttribute("CleanJwt");
 
         Integer userId = jwtUtil.extractUserId(token);
         if (userId == null) {
