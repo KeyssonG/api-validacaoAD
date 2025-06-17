@@ -13,5 +13,5 @@ public class FuncionarioCadastradoEvent {
     private String email;
     private String cpf;
     private String username;
-    private String password;
+    private String plainPassword;
 }
