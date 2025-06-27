@@ -29,9 +29,6 @@ RUN mkdir -p /app/certs
 # Copia o JAR da etapa de build
 COPY --from=builder /app/validacaoad.jar /app/validacaoad.jar
 
-# Copia certificados SSL (se existirem)
-COPY src/main/resources/*.p12 /app/certs/ 2>/dev/null || true
-
 # Expõe as portas HTTP e HTTPS
 EXPOSE 8089 8443
 
