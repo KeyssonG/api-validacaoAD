@@ -52,8 +52,9 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         
-        // Permitir origens HTTPS
+        // Permitir origens HTTP e HTTPS
         config.setAllowedOriginPatterns(Arrays.asList(
+            "http://*",            // Qualquer domínio HTTP
             "https://*",           // Qualquer domínio HTTPS
             "http://localhost:*",  // Localhost para desenvolvimento
             "http://127.0.0.1:*"   // IP local para desenvolvimento
