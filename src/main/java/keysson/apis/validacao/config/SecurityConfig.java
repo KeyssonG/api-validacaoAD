@@ -1,9 +1,10 @@
 package keysson.apis.validacao.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -14,9 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -51,32 +49,28 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        
-        // Permitir origens HTTP e HTTPS
+     
         config.setAllowedOriginPatterns(Arrays.asList(
-            "http://*",            // Qualquer domínio HTTP
-            "https://*",           // Qualquer domínio HTTPS
-            "http://localhost:*",  // Localhost para desenvolvimento
-            "http://127.0.0.1:*"   // IP local para desenvolvimento
+            "http://*",           
+            "https://*",           
+            "http://localhost:*",  
+            "http://127.0.0.1:*"   
         ));
         
         // Métodos HTTP permitidos
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         
-        // Headers permitidos
         config.setAllowedHeaders(Arrays.asList(
             "Origin", "Content-Type", "Accept", "Authorization", 
             "X-Requested-With", "Access-Control-Request-Method", 
             "Access-Control-Request-Headers"
         ));
         
-        // Headers expostos
+      
         config.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
         
-        // Permitir credenciais (cookies, headers de autorização)
         config.setAllowCredentials(true);
         
-        // Tempo de cache para preflight requests (em segundos)
         config.setMaxAge(3600L);
         
         source.registerCorsConfiguration("/**", config);

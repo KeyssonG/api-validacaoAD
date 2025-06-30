@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 public interface RegisterController {
 
-    @PostMapping("/cadastrar/funcionario")
+    @PostMapping("/cadastrar/funcionario-multithread")
     @Operation(
             summary = "Cadastrar um novo funcionário.",
             description = "Endpoint para cadastrar um novo funcionário MultiThread.",
