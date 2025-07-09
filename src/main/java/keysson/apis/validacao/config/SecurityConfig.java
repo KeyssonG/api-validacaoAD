@@ -33,7 +33,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/cadastrar/funcionario").permitAll()
+                        .requestMatchers( "/login-multithread").permitAll()
                         .anyRequest().authenticated()
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -52,8 +52,7 @@ public class SecurityConfig {
      
         config.setAllowedOriginPatterns(Arrays.asList(
             "http://*",           
-            "https://*",           
-            "http://localhost:*",  
+            "http://localhost:*",
             "http://127.0.0.1:*"   
         ));
         
@@ -77,4 +76,3 @@ public class SecurityConfig {
         return source;
     }
 }
-
