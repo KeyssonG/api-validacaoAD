@@ -5,8 +5,8 @@ pipeline {
         DOCKERHUB_IMAGE = "keyssong/validacaoad"
         DEPLOYMENT_FILE = "k8s/validacaoad-deployment.yaml"
         IMAGE_TAG = "latest"
-        PATH = "/home/keysson/.rd/bin:$PATH"
         DOCKER_HOST = "unix:///home/keysson/.rd/docker.sock"
+        PATH = "/home/keysson/.rd/bin:$PATH"
     }
 
     triggers {
