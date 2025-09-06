@@ -44,13 +44,15 @@ pipeline {
 
         stage('Push da Imagem para Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh """
-                        echo \$DOCKER_PASS | /home/keysson/.rd/bin/docker login -u \$DOCKER_USER --password-stdin
-                        /home/keysson/.rd/bin/docker push ${DOCKERHUB_IMAGE}:${IMAGE_TAG}
-                        /home/keysson/.rd/bin/docker push ${DOCKERHUB_IMAGE}:latest
-                    """
-                }
+                ithCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                            sh """
+                                mkdir -p /tmp/docker-config
+                                echo '{"credsStore": ""}' > /tmp/docker-config/config.json
+                                echo \$DOCKER_PASS | /home/keysson/.rd/bin/docker --config /tmp/docker-config login -u \$DOCKER_USER --password-stdin
+                                /home/keysson/.rd/bin/docker --config /tmp/docker-config push ${DOCKERHUB_IMAGE}:${IMAGE_TAG}
+                                /home/keysson/.rd/bin/docker --config /tmp/docker-config push ${DOCKERHUB_IMAGE}:latest
+                            """
+                        }
             }
         }
 
