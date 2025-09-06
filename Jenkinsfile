@@ -37,8 +37,8 @@ pipeline {
 
         stage('Build da Imagem Docker') {
             steps {
-                sh "docker build -t ${DOCKERHUB_IMAGE}:${IMAGE_TAG} ."
-                sh "docker tag ${DOCKERHUB_IMAGE}:${IMAGE_TAG} ${DOCKERHUB_IMAGE}:latest"
+                sh "/home/keysson/.rd/bin/docker build -t ${DOCKERHUB_IMAGE}:${IMAGE_TAG} ."
+                sh "/home/keysson/.rd/bin/docker tag ${DOCKERHUB_IMAGE}:${IMAGE_TAG} ${DOCKERHUB_IMAGE}:latest"
             }
         }
 
@@ -46,9 +46,9 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh """
-                        echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
-                        docker push ${DOCKERHUB_IMAGE}:${IMAGE_TAG}
-                        docker push ${DOCKERHUB_IMAGE}:latest
+                        echo \$DOCKER_PASS | /home/keysson/.rd/bin/docker login -u \$DOCKER_USER --password-stdin
+                        /home/keysson/.rd/bin/docker push ${DOCKERHUB_IMAGE}:${IMAGE_TAG}
+                        /home/keysson/.rd/bin/docker push ${DOCKERHUB_IMAGE}:latest
                     """
                 }
             }
