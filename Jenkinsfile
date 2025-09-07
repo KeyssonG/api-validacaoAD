@@ -5,8 +5,6 @@ pipeline {
         DOCKERHUB_IMAGE = "keyssong/validacaoad"
         DEPLOYMENT_FILE = "k8s/validacaoad-deployment.yaml"
         IMAGE_TAG = "latest"
-        DOCKER_HOST = "unix:///home/keysson/.rd/docker.sock"
-        PATH = "/home/keysson/.rd/bin:$PATH"
     }
 
     triggers {
@@ -37,22 +35,20 @@ pipeline {
 
         stage('Build da Imagem Docker') {
             steps {
-                sh "/home/keysson/.rd/bin/docker build -t ${DOCKERHUB_IMAGE}:${IMAGE_TAG} ."
-                sh "/home/keysson/.rd/bin/docker tag ${DOCKERHUB_IMAGE}:${IMAGE_TAG} ${DOCKERHUB_IMAGE}:latest"
+                sh "docker build -t ${DOCKERHUB_IMAGE}:${IMAGE_TAG} ."
+                sh "docker tag ${DOCKERHUB_IMAGE}:${IMAGE_TAG} ${DOCKERHUB_IMAGE}:latest"
             }
         }
 
         stage('Push da Imagem para Docker Hub') {
             steps {
-                ithCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                            sh """
-                                mkdir -p /tmp/docker-config
-                                echo '{"credsStore": ""}' > /tmp/docker-config/config.json
-                                echo \$DOCKER_PASS | /home/keysson/.rd/bin/docker --config /tmp/docker-config login -u \$DOCKER_USER --password-stdin
-                                /home/keysson/.rd/bin/docker --config /tmp/docker-config push ${DOCKERHUB_IMAGE}:${IMAGE_TAG}
-                                /home/keysson/.rd/bin/docker --config /tmp/docker-config push ${DOCKERHUB_IMAGE}:latest
-                            """
-                        }
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh """
+                        echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
+                        docker push ${DOCKERHUB_IMAGE}:${IMAGE_TAG}
+                        docker push ${DOCKERHUB_IMAGE}:latest
+                    """
+                }
             }
         }
 
