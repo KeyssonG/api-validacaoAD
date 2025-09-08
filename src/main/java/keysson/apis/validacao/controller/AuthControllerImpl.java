@@ -1,7 +1,8 @@
 package keysson.apis.validacao.controller;
 
-import keysson.apis.validacao.config.JwtAuthenticationFilter;
+import keysson.apis.validacao.dto.request.ConfirmResetPassword;
 import keysson.apis.validacao.dto.request.LoginRequest;
+import keysson.apis.validacao.dto.request.RequestResetPassword;
 import keysson.apis.validacao.dto.request.RequestUpdatePassword;
 import keysson.apis.validacao.dto.response.LoginResponse;
 import keysson.apis.validacao.service.AuthService;
@@ -30,5 +31,15 @@ public class AuthControllerImpl implements AuthController{
         authService.updatePasswordUser(request);
     }
 
+    @Override
+    public ResponseEntity<Void> solicitarResetSenha(@RequestBody RequestResetPassword request) throws SQLException {
+        authService.solicitarResetSenha(request.getUsername(), request.getEmail());
+        return ResponseEntity.ok().build();
+    }
 
+    @Override
+    public ResponseEntity<Void> confirmarResetSenha(@RequestBody ConfirmResetPassword request) throws SQLException {
+        authService.confirmarResetSenha(request.getToken(), request.getNovaSenha());
+        return ResponseEntity.ok().build();
+    }
 }
