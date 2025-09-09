@@ -19,6 +19,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue passwordResetQueue() {
+        return QueueBuilder.durable("password.reset.queue").build();
+    }
+
+    @Bean
     public Jackson2JsonMessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
     }

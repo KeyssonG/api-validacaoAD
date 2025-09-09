@@ -33,8 +33,4 @@ public class RabbitService {
 
         rabbitRepository.saveMenssage(mensagenPendente);
     }
-
-    public void publishPasswordResetEvent(PasswordResetEvent event) {
-        rabbitTemplate.convertAndSend("password.reset.queue", event);
-    }
 }

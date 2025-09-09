@@ -12,6 +12,7 @@ import keysson.apis.validacao.exception.enums.ErrorCode;
 import keysson.apis.validacao.model.PasswordResetToken;
 import keysson.apis.validacao.model.User;
 import keysson.apis.validacao.repository.ValidacaoRepository;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,34 +38,37 @@ public class AuthService {
     private RabbitService rabbitService;
 
     @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Autowired
     public AuthService(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
-    public LoginResponse login (LoginRequest request) throws SQLException {
-            User user = validacaoRepository.findByUsername(request.getUsername());
-            if (user == null) {
-                throw new BusinessRuleException(ErrorCode.USER_NOT_FOUND);
-            }
+    public LoginResponse login(LoginRequest request) throws SQLException {
+        User user = validacaoRepository.findByUsername(request.getUsername());
+        if (user == null) {
+            throw new BusinessRuleException(ErrorCode.USER_NOT_FOUND);
+        }
 
-            Boolean checkPassword = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        Boolean checkPassword = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
-            if (checkPassword == false) {
-                throw new BusinessRuleException(ErrorCode.BAD_PASSWORD);
-            }
+        if (checkPassword == false) {
+            throw new BusinessRuleException(ErrorCode.BAD_PASSWORD);
+        }
 
-            boolean isPrimeiroAcesso = user.isPrimeiroAcesso();
-            if (isPrimeiroAcesso) {
-                    validacaoRepository.updateFirstAccess( false, user.getId());
-            }
+        boolean isPrimeiroAcesso = user.isPrimeiroAcesso();
+        if (isPrimeiroAcesso) {
+            validacaoRepository.updateFirstAccess(false, user.getId());
+        }
 
-            String token = jwtUtil.generateToken(
-                    user.getId(),
-                    user.getCompanyId(),
-                    user.getConsumerId());
+        String token = jwtUtil.generateToken(
+                user.getId(),
+                user.getCompanyId(),
+                user.getConsumerId());
 
-            return new LoginResponse(token, jwtUtil.getExpirationDate(), isPrimeiroAcesso);
+        return new LoginResponse(token, jwtUtil.getExpirationDate(), isPrimeiroAcesso);
 
     }
 
@@ -95,7 +99,7 @@ public class AuthService {
         }
 
         // Gera um token único
-        int tokenInt = 100000 + (int)(Math.random() * 900000);
+        int tokenInt = 100000 + (int) (Math.random() * 900000);
         String token = String.valueOf(tokenInt);
         LocalDateTime expiresAt = LocalDateTime.now().plusHours(1); // Token válido por 1 hora
 
@@ -105,8 +109,7 @@ public class AuthService {
         // Cria o evento para enviar para a fila
         PasswordResetEvent event = new PasswordResetEvent(email, token, user.getUsername());
 
-        // Publica na fila do RabbitMQ
-        rabbitService.publishPasswordResetEvent(event);
+        rabbitTemplate.convertAndSend("password.reset.queue", event);
     }
 
     @Transactional
