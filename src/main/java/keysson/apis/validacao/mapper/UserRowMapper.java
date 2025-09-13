@@ -20,7 +20,7 @@ public class UserRowMapper implements RowMapper<User> {
         user.setPassword(rs.getString("password"));
         user.setStatus(rs.getInt("status"));
         user.setConsumerId(UUID.fromString(rs.getString("consumer_id")));
-        user.setPrimeiroAcesso(rs.getBoolean("primeiro_acesso"));
+        user.setInitialAccess(rs.getBoolean("primeiro_acesso"));
 
         return user;
     }
