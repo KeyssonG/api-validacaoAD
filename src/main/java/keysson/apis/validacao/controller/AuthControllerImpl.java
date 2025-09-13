@@ -32,14 +32,14 @@ public class AuthControllerImpl implements AuthController{
     }
 
     @Override
-    public ResponseEntity<Void> solicitarResetSenha(@RequestBody RequestResetPassword request) throws SQLException {
-        authService.solicitarResetSenha(request.getUsername(), request.getEmail());
+    public ResponseEntity<Void> requestPasswordReset(@RequestBody RequestResetPassword request) throws SQLException {
+        authService.requestPasswordChange(request.getUsername(), request.getEmail());
         return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<Void> confirmarResetSenha(@RequestBody ConfirmResetPassword request) throws SQLException {
-        authService.confirmarResetSenha(request.getToken(), request.getNovaSenha());
+    public ResponseEntity<Void> confirmPasswordReset(@RequestBody ConfirmResetPassword request) throws SQLException {
+        authService.validatePasswordReset(request.getToken(), request.getNovaSenha());
         return ResponseEntity.ok().build();
     }
 }

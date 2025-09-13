@@ -58,8 +58,8 @@ public class AuthService {
             throw new BusinessRuleException(ErrorCode.BAD_PASSWORD);
         }
 
-        boolean isPrimeiroAcesso = user.isPrimeiroAcesso();
-        if (isPrimeiroAcesso) {
+        boolean isInitialAccess = user.isInitialAccess();
+        if (isInitialAccess) {
             validacaoRepository.updateFirstAccess(false, user.getId());
         }
 
@@ -68,7 +68,7 @@ public class AuthService {
                 user.getCompanyId(),
                 user.getConsumerId());
 
-        return new LoginResponse(token, jwtUtil.getExpirationDate(), isPrimeiroAcesso);
+        return new LoginResponse(token, jwtUtil.getExpirationDate(), isInitialAccess);
 
     }
 
@@ -86,12 +86,12 @@ public class AuthService {
             throw new IllegalArgumentException("A nova senha deve ter pelo menos 6 caracteres.");
         }
 
-        String novaSenhaCriptografada = passwordEncoder.encode(request.getNewPassword());
-        validacaoRepository.saveNewPassword(novaSenhaCriptografada, userId);
+        String newPasswordHash = passwordEncoder.encode(request.getNewPassword());
+        validacaoRepository.saveNewPassword(newPasswordHash, userId);
     }
 
     @Transactional
-    public void solicitarResetSenha(String username, String email) throws SQLException {
+    public void requestPasswordChange(String username, String email) throws SQLException {
         // Busca o usuário pelo username e email na tabela contatos
         User user = validacaoRepository.findByUsernameAndEmail(username, email);
         if (user == null) {
@@ -113,7 +113,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void confirmarResetSenha(String token, String novaSenha) throws SQLException {
+    public void validatePasswordReset(String token, String novaSenha) throws SQLException {
         // Busca o token válido
         PasswordResetToken resetToken = validacaoRepository.findValidResetToken(token);
         if (resetToken == null) {

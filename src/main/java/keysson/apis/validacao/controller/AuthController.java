@@ -55,7 +55,7 @@ public interface AuthController {
                     content = @Content(schema = @Schema(implementation = RequestResetPassword.class))
             )
     )
-    ResponseEntity<Void> solicitarResetSenha(@RequestBody RequestResetPassword request) throws SQLException;
+    ResponseEntity<Void> requestPasswordReset(@RequestBody RequestResetPassword request) throws SQLException;
 
     @PostMapping("/reset-senha/confirmar")
     @Operation(
@@ -67,5 +67,5 @@ public interface AuthController {
                     content = @Content(schema = @Schema(implementation = ConfirmResetPassword.class))
             )
     )
-    ResponseEntity<Void> confirmarResetSenha(@RequestBody ConfirmResetPassword request) throws SQLException;
+    ResponseEntity<Void> confirmPasswordReset(@RequestBody ConfirmResetPassword request) throws SQLException;
 }
