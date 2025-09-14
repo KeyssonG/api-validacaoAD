@@ -11,9 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RequestResetPassword {
     
-    @NotBlank(message = "Username é obrigatório")
-    private String username;
-    
     @NotBlank(message = "Email é obrigatório")
     @Email(message = "Email deve ter formato válido")
     private String email;

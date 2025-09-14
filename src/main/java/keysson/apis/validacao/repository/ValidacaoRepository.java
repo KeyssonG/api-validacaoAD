@@ -93,6 +93,15 @@ public class ValidacaoRepository {
         });
     }
 
+    public User findByEmail(String username) {
+        return jdbcTemplate.query(FIND_BY_USERNAME, new Object[]{username}, rs -> {
+            if (rs.next()) {
+                return userRowMapper.mapRow(rs, 1);
+            }
+            return null;
+        });
+    }
+
     public User findById(Integer userId) {
         return jdbcTemplate.query(FIND_BY_USERNAME, new Object[]{userId}, rs -> {
             if (rs.next()) {

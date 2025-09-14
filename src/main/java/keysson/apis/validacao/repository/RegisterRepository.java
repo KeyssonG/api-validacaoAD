@@ -12,7 +12,6 @@ import java.sql.CallableStatement;
 import java.sql.Types;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.UUID;
 
 @Repository
 public class RegisterRepository {
@@ -42,6 +41,12 @@ public class RegisterRepository {
              SELECT COUNT(*)
              FROM users
              WHERE numero_conta = ?
+        """;
+
+    private static final String CHECK_EXISTS_EMAIL = """
+             SELECT COUNT(*)
+             FROM contatos
+             WHERE email = ?
         """;
 
     public boolean existsByCpf(String cpf) {
@@ -98,6 +103,11 @@ public class RegisterRepository {
 
     public boolean existsByNumeroConta(int numeroConta) {
         Long count = jdbcTemplate.queryForObject(CHECK_EXISTS_NUMERO_CONTA, Long.class, numeroConta);
+        return count != null && count > 0;
+    }
+
+    public boolean existsByEmail(String email) {
+        Long count = jdbcTemplate.queryForObject(CHECK_EXISTS_EMAIL, Long.class, email);
         return count != null && count > 0;
     }
 }
