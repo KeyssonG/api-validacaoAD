@@ -17,7 +17,7 @@ public interface RegisterController {
             summary = "Cadastrar um novo funcionário.",
             description = "Endpoint para cadastrar um novo funcionário MultiThread.",
             requestBody = @RequestBody(
-                    description = "Dados da nova empresa",
+                    description = "Dados da novo funcionário.",
                     required = true,
                     content = @Content(
                             schema = @Schema(implementation = RequestRegister.class)
