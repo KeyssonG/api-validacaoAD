@@ -91,9 +91,9 @@ public class AuthService {
     }
 
     @Transactional
-    public void requestPasswordChange(String username, String email) throws SQLException {
+    public void requestPasswordChange( String email) throws SQLException {
         // Busca o usuário pelo username e email na tabela contatos
-        User user = validacaoRepository.findByUsernameAndEmail(username, email);
+        User user = validacaoRepository.findByUsernameAndEmail( email);
         if (user == null) {
             throw new BusinessRuleException(ErrorCode.USER_NOT_FOUND);
         }

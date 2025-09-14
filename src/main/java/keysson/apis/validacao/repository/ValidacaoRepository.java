@@ -60,13 +60,13 @@ public class ValidacaoRepository {
             """;
 
     // Consultas para reset de senha
-    private static final String FIND_USER_BY_USERNAME_AND_EMAIL = """
+    private static final String FIND_USER_BY_EMAIL = """
             SELECT u.id, u.company_id, u.username, u.password, u.status, 
                    c.consumer_id, u.primeiro_acesso
             FROM users u
             JOIN companies c ON u.company_id = c.id
             JOIN contatos ct ON u.id = ct.user_id
-            WHERE u.username = ? AND ct.email = ? AND c.id = 0
+            WHERE ct.email = ? AND c.id = 0
             """;
 
     private static final String SAVE_RESET_TOKEN = """
@@ -145,7 +145,7 @@ public class ValidacaoRepository {
 
     // Métodos para reset de senha
     public User findByUsernameAndEmail(String username, String email) {
-        return jdbcTemplate.query(FIND_USER_BY_USERNAME_AND_EMAIL, new Object[]{username, email}, rs -> {
+        return jdbcTemplate.query(FIND_USER_BY_EMAIL, new Object[]{ email}, rs -> {
             if (rs.next()) {
                 return userRowMapper.mapRow(rs, 1);
             }
