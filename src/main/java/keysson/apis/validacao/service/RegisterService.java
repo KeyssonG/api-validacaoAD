@@ -55,13 +55,19 @@ public class RegisterService {
 
         FuncionarioRegistroResultado resultado = registerRepository.save(
                 requestRegister.getNome(),
+                requestRegister.getDataNascimento(),
                 requestRegister.getEmail(),
                 requestRegister.getCpf(),
+                requestRegister.getSexo(),
                 encodedPassword,
                 requestRegister.getUsername(),
                 requestRegister.getDepartamento(),
                 numeroConta
         );
+
+        if (resultado.getIdFuncionario() == 0) {
+            throw new BusinessRuleException(ErrorCode.ERRO_CADASTRAR_FUNCIONARIO);
+        }
 
         if (resultado.getResultCode() == 0) {
             FuncionarioCadastradoEvent event = new FuncionarioCadastradoEvent(

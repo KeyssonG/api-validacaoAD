@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import java.sql.CallableStatement;
 import java.sql.Types;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 @Repository
@@ -40,7 +41,7 @@ public class RegisterRepository {
     private static final String CHECK_EXISTS_NUMERO_CONTA = """
              SELECT COUNT(*)
              FROM users
-             WHERE numero_conta = ?
+             WHERE conta_matricula = ?
         """;
 
     private static final String CHECK_EXISTS_EMAIL = """
@@ -59,32 +60,36 @@ public class RegisterRepository {
         return count != null && count > 0;
     }
 
-    public FuncionarioRegistroResultado save(String nome, String email, String cpf, String password,
+    public FuncionarioRegistroResultado save(String nome, Date dataNascimento, String email, String cpf, String sexo, String password,
                                              String username, String departamento, int numeroConta) {
 
-        String sql = "CALL proc_registrar_funcionario(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "CALL proc_registrar_funcionario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         Map<String, Object> result = jdbcTemplate.call(connection -> {
             CallableStatement cs = connection.prepareCall(sql);
 
 
             cs.setString(1, nome);
-            cs.setString(2, departamento);
-            cs.setString(3, email);
-            cs.setString(4, cpf);
-            cs.setString(5, username);
-            cs.setString(6, password);
-            cs.setInt(7, numeroConta);
+            cs.setDate(2, new java.sql.Date(dataNascimento.getTime()));
+            cs.setString(3, departamento);
+            cs.setString(4, email);
+            cs.setString(5, cpf);
+            cs.setString(6, sexo);
+            cs.setString(7, username);
+            cs.setString(8, password);
+            cs.setInt(9, numeroConta);
 
-            cs.registerOutParameter(8, Types.INTEGER);
-            cs.registerOutParameter(9, Types.INTEGER);
+            cs.registerOutParameter(10, Types.INTEGER);
+            cs.registerOutParameter(11, Types.INTEGER);
 
             return cs;
         }, Arrays.asList(
                 new SqlParameter("p_nome", Types.VARCHAR),
+                new SqlParameter("p_data_nascimento", Types.DATE),
                 new SqlParameter("p_departamento", Types.VARCHAR),
                 new SqlParameter("p_email", Types.VARCHAR),
                 new SqlParameter("p_cpf", Types.VARCHAR),
+                new SqlParameter("p_sexo", Types.VARCHAR),
                 new SqlParameter("p_username", Types.VARCHAR),
                 new SqlParameter("p_password", Types.VARCHAR),
                 new SqlParameter("p_numero_conta", Types.INTEGER),

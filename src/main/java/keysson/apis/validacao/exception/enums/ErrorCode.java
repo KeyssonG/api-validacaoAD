@@ -12,6 +12,7 @@ public enum ErrorCode {
         ERRO_CADASTRAR("Erro ao cadastrar empresa", HttpStatus.BAD_REQUEST),
         USERNAME_JA_EXISTE("Esse Username já está em uso", HttpStatus.BAD_REQUEST),
         EMAIL_JA_CADASTRADO("Esse Email já está em uso", HttpStatus.BAD_REQUEST),
+        ERRO_CADASTRAR_FUNCIONARIO("Erro ao cadastrar funcionario", HttpStatus.BAD_REQUEST)
     ;
 
     private final String message;

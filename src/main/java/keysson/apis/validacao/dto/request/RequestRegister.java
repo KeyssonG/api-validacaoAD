@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 
 @Data
 @NoArgsConstructor
@@ -16,12 +18,18 @@ public class RequestRegister {
     @NotBlank(message = "Nome do funcionário obrigatório.")
     private String nome;
 
+    @NotBlank(message = "Data de Nascimento obrigatório.")
+    private Date dataNascimento;
+
     @NotBlank(message = "E-mail Corporativo obrigatório.")
     private String email;
 
     @NotBlank(message = "O CPF é obrigatório, somente números")
     @Size(max = 11, message = "O CPF deve ter no máximo 11 caracteres")
     private String cpf;
+
+    @NotBlank(message = "Sexo do funcionário obrigatório.")
+    private String sexo;
 
     @NotBlank(message = "O nome do usuário deve ser preenchido")
     private String username;
