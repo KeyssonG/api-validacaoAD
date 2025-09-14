@@ -111,7 +111,7 @@ public class ValidacaoRepository {
         });
     }
 
-    public void activeAccount (Long idUser, Long idEmpresa, String username) {
+    public void activeAccount(Long idUser, Long idEmpresa, String username) {
         try {
             jdbcTemplate.update(ACCOUNT_ACTIVATION, idUser, idEmpresa, username);
         } catch (Exception e) {
@@ -127,11 +127,11 @@ public class ValidacaoRepository {
         }
     }
 
-    public void updateFirstAccess( boolean primeiroAcesso, int userId) throws SQLException {
+    public void updateFirstAccess(boolean primeiroAcesso, int userId) throws SQLException {
         try {
-            jdbcTemplate.update(CHANGE_FIRST_ACCESS,  primeiroAcesso, userId);
+            jdbcTemplate.update(CHANGE_FIRST_ACCESS, primeiroAcesso, userId);
         } catch (Exception ex) {
-            throw new SQLException("Erro ao alterar o status do primeiro acesso" +  ex.getMessage(), ex);
+            throw new SQLException("Erro ao alterar o status do primeiro acesso" + ex.getMessage(), ex);
         }
     }
 
@@ -144,8 +144,8 @@ public class ValidacaoRepository {
     }
 
     // Métodos para reset de senha
-    public User findByUsernameAndEmail(String username, String email) {
-        return jdbcTemplate.query(FIND_USER_BY_EMAIL, new Object[]{ email}, rs -> {
+    public User findByUsernameAndEmail(String email) {
+        return jdbcTemplate.query(FIND_USER_BY_EMAIL, new Object[]{email}, rs -> {
             if (rs.next()) {
                 return userRowMapper.mapRow(rs, 1);
             }
@@ -163,12 +163,12 @@ public class ValidacaoRepository {
 
     public PasswordResetToken findValidResetToken(String token) {
         return jdbcTemplate.query(FIND_VALID_RESET_TOKEN,
-            new Object[]{token, LocalDateTime.now()}, rs -> {
-            if (rs.next()) {
-                return passwordResetTokenRowMapper.mapRow(rs, 1);
-            }
-            return null;
-        });
+                new Object[]{token, LocalDateTime.now()}, rs -> {
+                    if (rs.next()) {
+                        return passwordResetTokenRowMapper.mapRow(rs, 1);
+                    }
+                    return null;
+                });
     }
 
     public void markTokenAsUsed(String token) throws SQLException {
