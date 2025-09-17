@@ -75,7 +75,7 @@ public class ValidacaoRepository {
             """;
 
     private static final String FIND_VALID_RESET_TOKEN = """
-            SELECT id, user_id, token, expires_at, created_at, used
+            SELECT user_id, token, expires_at, created_at, used
             FROM password_reset_tokens
             WHERE token = ? AND expires_at > ? AND used = false
             """;
@@ -135,9 +135,9 @@ public class ValidacaoRepository {
         }
     }
 
-    public void saveNewPassword(String novaSenha, Integer userId) throws SQLException {
+    public void saveNewPassword(String newPassword, Integer userId) throws SQLException {
         try {
-            jdbcTemplate.update(UPDATE_PASSWORD, novaSenha, userId);
+            jdbcTemplate.update(UPDATE_PASSWORD, newPassword, userId);
         } catch (Exception ex) {
             throw new SQLException("Erro ao tentar atualizar a senha" + ex.getMessage(), ex);
         }

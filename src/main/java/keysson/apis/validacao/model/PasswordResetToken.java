@@ -10,8 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PasswordResetToken {
-    
-    private Long id;
+
     private Long userId;
     private String token;
     private LocalDateTime expiresAt;

@@ -113,23 +113,18 @@ public class AuthService {
     }
 
     @Transactional
-    public void validatePasswordReset(String token, String novaSenha) throws SQLException {
+    public void validatePasswordReset(String token, String newPassword) throws SQLException {
         // Busca o token válido
         PasswordResetToken resetToken = validacaoRepository.findValidResetToken(token);
         if (resetToken == null) {
-            throw new BusinessRuleException(ErrorCode.USER_NOT_FOUND); // Pode criar um erro específico para token inválido
-        }
-
-        // Valida o tamanho da nova senha
-        if (novaSenha == null || novaSenha.length() < 6) {
-            throw new IllegalArgumentException("A nova senha deve ter pelo menos 6 caracteres.");
+            throw new BusinessRuleException(ErrorCode.TOKEN_INVALIDO);
         }
 
         // Criptografa a nova senha
-        String novaSenhaCriptografada = passwordEncoder.encode(novaSenha);
+        String newEncryptedPassword = passwordEncoder.encode(newPassword);
 
         // Atualiza a senha do usuário
-        validacaoRepository.saveNewPassword(novaSenhaCriptografada, resetToken.getUserId().intValue());
+        validacaoRepository.saveNewPassword(newEncryptedPassword, resetToken.getUserId().intValue());
 
         // Marca o token como usado
         validacaoRepository.markTokenAsUsed(token);

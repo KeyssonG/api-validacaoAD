@@ -16,5 +16,5 @@ public class ConfirmResetPassword {
     
     @NotBlank(message = "Nova senha é obrigatória")
     @Size(min = 6, message = "Senha deve ter pelo menos 6 caracteres")
-    private String novaSenha;
+    private String newPassword;
 }

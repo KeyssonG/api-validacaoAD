@@ -39,7 +39,7 @@ public class AuthControllerImpl implements AuthController{
 
     @Override
     public ResponseEntity<Void> confirmPasswordReset(@RequestBody ConfirmResetPassword request) throws SQLException {
-        authService.validatePasswordReset(request.getToken(), request.getNovaSenha());
+        authService.validatePasswordReset(request.getToken(), request.getNewPassword());
         return ResponseEntity.ok().build();
     }
 }
