@@ -101,7 +101,7 @@ public class AuthService {
         // Gera um token único
         int tokenInt = 100000 + (int) (Math.random() * 900000);
         String token = String.valueOf(tokenInt);
-        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(3); // Token válido por 1 hora
+        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(3);
 
         // Salva o token no banco
         validacaoRepository.saveResetToken((long) user.getId(), token, expiresAt);
