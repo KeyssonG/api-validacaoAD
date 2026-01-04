@@ -95,6 +95,7 @@ public class RegisterRepository {
                 new SqlParameter("p_username", Types.VARCHAR),
                 new SqlParameter("p_password", Types.VARCHAR),
                 new SqlParameter("p_numero_conta", Types.INTEGER),
+                new SqlParameter("p_telefone", Types.VARCHAR),
                 new SqlOutParameter("out_result", Types.INTEGER),
                 new SqlOutParameter("out_user_id", Types.INTEGER)
         ));
