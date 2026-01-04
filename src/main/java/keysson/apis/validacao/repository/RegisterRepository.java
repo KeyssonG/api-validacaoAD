@@ -1,18 +1,20 @@
 package keysson.apis.validacao.repository;
 
-import keysson.apis.validacao.dto.response.FuncionarioRegistroResultado;
+import java.sql.CallableStatement;
+import java.sql.Types;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.sql.CallableStatement;
-import java.sql.Types;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map;
+import keysson.apis.validacao.dto.response.FuncionarioRegistroResultado;
 
 @Repository
 public class RegisterRepository {
@@ -61,9 +63,9 @@ public class RegisterRepository {
     }
 
     public FuncionarioRegistroResultado save(String nome, Date dataNascimento, String email, String cpf, String sexo, String password,
-                                             String username, String departamento, int numeroConta) {
+                                             String username, String departamento, int numeroConta, String telefone) {
 
-        String sql = "CALL proc_registrar_funcionario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "CALL proc_registrar_funcionario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         Map<String, Object> result = jdbcTemplate.call(connection -> {
             CallableStatement cs = connection.prepareCall(sql);
@@ -78,9 +80,9 @@ public class RegisterRepository {
             cs.setString(7, username);
             cs.setString(8, password);
             cs.setInt(9, numeroConta);
-
-            cs.registerOutParameter(10, Types.INTEGER);
+            cs.setString(10, telefone);
             cs.registerOutParameter(11, Types.INTEGER);
+            cs.registerOutParameter(12, Types.INTEGER);
 
             return cs;
         }, Arrays.asList(

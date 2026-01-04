@@ -1,13 +1,13 @@
 package keysson.apis.validacao.dto.request;
 
 
+import java.util.Date;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 
 @Data
@@ -36,6 +36,9 @@ public class RequestRegister {
 
     @NotBlank(message = "Departamento que o funcionário pertence")
     private String departamento;
+
+    @NotBlank(message = "O telefone do funcionário deve ser preenchido")
+    private String telefone;
 }
 
 

@@ -62,7 +62,8 @@ public class RegisterService {
                 encodedPassword,
                 requestRegister.getUsername(),
                 requestRegister.getDepartamento(),
-                numeroConta
+                numeroConta,
+                requestRegister.getTelefone()
         );
 
         if (resultado.getIdFuncionario() == 0) {
