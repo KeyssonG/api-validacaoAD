@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         DOCKERHUB_IMAGE = "keyssong/validacaoad"
-        DEPLOYMENT_FILE = "k8s/validacaoad-deployment.yaml"
         IMAGE_TAG = "latest"
+        DEPLOYMENT_FILE = "k8s/validacaoad-deployment.yaml"
     }
 
     triggers {
@@ -16,6 +16,7 @@ pipeline {
     }
 
     stages {
+
         stage('Verificar Branch') {
             when {
                 branch 'master'
@@ -27,24 +28,30 @@ pipeline {
 
         stage('Checkout do Código') {
             steps {
-                git credentialsId: 'Github',
-                    url: 'https://github.com/KeyssonG/api-validacaoAD.git',
-                    branch: 'master'
+                checkout scm
             }
         }
 
         stage('Build da Imagem Docker') {
             steps {
-                sh "docker build -t ${DOCKERHUB_IMAGE}:${IMAGE_TAG} ."
-                sh "docker tag ${DOCKERHUB_IMAGE}:${IMAGE_TAG} ${DOCKERHUB_IMAGE}:latest"
+                sh '''
+                    docker build -t $DOCKERHUB_IMAGE:$IMAGE_TAG .
+                    docker tag $DOCKERHUB_IMAGE:$IMAGE_TAG $DOCKERHUB_IMAGE:latest
+                '''
             }
         }
 
         stage('Push da Imagem para Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
                     sh '''
-                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         docker push $DOCKERHUB_IMAGE:$IMAGE_TAG
                         docker push $DOCKERHUB_IMAGE:latest
                     '''
@@ -52,29 +59,35 @@ pipeline {
             }
         }
 
-        stage('Atualizar deployment.yaml') {
+        stage('Atualizar deployment.yaml (GitOps)') {
             steps {
-                script {
-                    def commitSuccess = false
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'GitHub',
+                        usernameVariable: 'GIT_USER',
+                        passwordVariable: 'GIT_TOKEN'
+                    )
+                ]) {
+                    sh '''
+                        git checkout master
 
-                    sh """
-                        sed -i 's|image: .*|image: ${DOCKERHUB_IMAGE}:${IMAGE_TAG}|g' ${DEPLOYMENT_FILE}
-                    """
-
-                    sh """
                         git config user.email "jenkins@pipeline.com"
                         git config user.name "Jenkins"
-                        git add "${DEPLOYMENT_FILE}"
-                        git diff --cached --quiet || git commit -m "Atualiza imagem Docker para latest"
-                    """
 
-                    commitSuccess = sh(script: 'git diff --cached --quiet || echo "changed"', returnStdout: true).trim() == "changed"
+                        git remote set-url origin https://$GIT_USER:$GIT_TOKEN@github.com/KeyssonG/api-validacaoAD.git
 
-                    if (commitSuccess) {
-                        echo "Alterações no arquivo de deployment detectadas. Commit realizado."
-                    } else {
-                        echo "Nenhuma alteração detectada no arquivo de deployment. Não foi realizado commit."
-                    }
+                        sed -i "s|image: .*|image: $DOCKERHUB_IMAGE:$IMAGE_TAG|" $DEPLOYMENT_FILE
+
+                        git add $DEPLOYMENT_FILE
+
+                        if ! git diff --cached --quiet; then
+                            git commit -m "Atualiza imagem Docker para latest"
+                            git push origin master
+                            echo "Alterações detectadas e enviadas ao repositório."
+                        else
+                            echo "Nenhuma alteração detectada no deployment.yaml"
+                        fi
+                    '''
                 }
             }
         }
@@ -82,10 +95,10 @@ pipeline {
 
     post {
         success {
-            echo "Pipeline concluída com sucesso! A imagem 'keyssong/validacaoad:latest' foi atualizada e o ArgoCD aplicará as alterações automaticamente. 🚀"
+            echo "🚀 Pipeline concluída com sucesso! Imagem atualizada e GitOps acionado via ArgoCD."
         }
         failure {
-            echo "Erro na pipeline. Confira os logs para mais detalhes."
+            echo "❌ Erro na pipeline. Verifique os logs."
         }
     }
 }
