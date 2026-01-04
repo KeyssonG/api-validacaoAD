@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: validacaoad-container
-          image: keyssong/validacaoad:latest  # 🔹 Buscar no Docker Hub
+          image: keyssong/validacaoad:latest
           imagePullPolicy: Always           # 🔹 Sempre buscar a versão mais recente
           ports:
             - containerPort: 8089
