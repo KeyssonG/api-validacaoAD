@@ -19,7 +19,7 @@ import java.sql.SQLException;
 
 public interface AuthController {
 
-    @PostMapping("/login-multithread")
+    @PostMapping("/login")
     @Operation(
             summary = "Login do usuário",
             description = "Endpoint que autentica usuário através do username e password, e gera Token.",

@@ -33,7 +33,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers( "/login-multithread").permitAll()
+                        .requestMatchers( "/login").permitAll()
                         .requestMatchers( "/reset-senha/solicitar").permitAll()
                         .requestMatchers( "/reset-senha/confirmar").permitAll()
                         .requestMatchers( "/cadastrar/funcionario-multithread").permitAll()
